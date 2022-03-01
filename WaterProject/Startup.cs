@@ -35,6 +35,8 @@ namespace WaterProject
             });
 
             services.AddScoped<IWaterProjectRepository, EFWaterProjectRepository>();
+
+            services.AddRazorPages();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -70,6 +72,8 @@ namespace WaterProject
 
 
                 endpoints.MapDefaultControllerRoute();
+
+                endpoints.MapRazorPages();
             });
         }
     }
