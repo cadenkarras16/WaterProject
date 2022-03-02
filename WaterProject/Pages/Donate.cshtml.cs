@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using WaterProject.Models;
+using WaterProject.Models.Infrastructure;
 
 namespace WaterProject.Pages
 {
@@ -20,22 +21,25 @@ namespace WaterProject.Pages
 
 
         public Basket basket { get; set; }
+        public string ReturnUrl { get; set; }
 
 
-        public void OnGet()
+        public void OnGet(string returnUrl)
         {
-
+            ReturnUrl = returnUrl ?? "/";
+            basket = HttpContext.Session.GetJson<Basket>("basket") ?? new Basket();
         }
 
-        public IActionResult onPost(int projectId)
+        public IActionResult OnPost(int projectId, string returnUrl)
         {
             Project p = repo.Projects.FirstOrDefault(x => x.ProjectId == projectId);
 
-            basket = new Basket();
-
+            basket = HttpContext.Session.GetJson<Basket>("basket") ?? new Basket();
             basket.AddItem(p, 1);
 
-            return RedirectToPage();
+            HttpContext.Session.SetJson("basket", basket);
+
+            return RedirectToPage(new { ReturnUrl = returnUrl });
         }
     }
 }
